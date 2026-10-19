@@ -1,0 +1,25 @@
+name: Update METAR
+
+on:
+  schedule:
+    - cron: "5,35 * * * *"   # twice an hour; KLAF reports come out around :54
+  workflow_dispatch:          # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  metar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch latest KLAF METAR
+        run: |
+          curl -sf "https://aviationweather.gov/api/data/metar?ids=KLAF&format=raw" | head -n 1 > metar.new || true
+          if grep -q "KLAF" metar.new; then mv metar.new metar.txt; else rm -f metar.new; fi
+      - name: Commit if it changed
+        run: |
+          git config user.name "metar-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add metar.txt
+          git diff --cached --quiet || (git commit -m "Update KLAF METAR" && git push)
