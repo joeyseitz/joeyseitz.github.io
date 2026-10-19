@@ -508,7 +508,9 @@ footer a{text-decoration:none}
       while (t.length) { t = t.slice(0, -1); el.textContent = t; await wait(45); }
       for (const ch of next) { t += ch; el.textContent = t; await wait(75); }
     };
-    setInterval(swap, 2600);
+    // One loop, one word at a time: never overlaps, and pauses while the tab is hidden.
+    const visible = () => document.hidden ? new Promise(r => document.addEventListener("visibilitychange", function h(){ if (!document.hidden) { document.removeEventListener("visibilitychange", h); r(); } })) : Promise.resolve();
+    (async () => { for (;;) { await wait(2000); await visible(); await swap(); } })();
   }
 
   // ===== TOP ARTISTS: edit this list to update the Spotify card =====
@@ -566,7 +568,7 @@ footer a{text-decoration:none}
   // On GitHub Pages, a scheduled GitHub Action saves the latest report to metar.txt.
   // Set GITHUB_REPO to "yourusername/yourusername.github.io" so the page can read it
   // even before GitHub Pages rebuilds.
-  const GITHUB_REPO = "";
+  const GITHUB_REPO = "joeyseitz/joeyseitz.github.io";
   const sources = ["metar.txt"];
   if (GITHUB_REPO) sources.push("https://raw.githubusercontent.com/" + GITHUB_REPO + "/main/metar.txt");
   sources.push("https://aviationweather.gov/api/data/metar?ids=KLAF&format=raw");
