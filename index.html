@@ -562,12 +562,31 @@ footer a{text-decoration:none}
   }
   renderMetar();
   setInterval(renderMetar, 60000);
-  // Live refresh when hosted on your own domain; inside claude.ai this is blocked and the saved report stays.
-  fetch("https://aviationweather.gov/api/data/metar?ids=KLAF&format=raw")
-    .then(r => r.ok ? r.text() : Promise.reject())
-    .then(t => { const line = t.split("\n").find(l => /^(METAR |SPECI )?KLAF /.test(l)); if (!line) return;
-      document.getElementById("metar-raw").textContent = line.replace(/^(METAR |SPECI )?KLAF /, "").replace(/\s*\$\s*$/, ""); renderMetar(); })
-    .catch(() => {});
+  // ===== LIVE METAR =====
+  // On GitHub Pages, a scheduled GitHub Action saves the latest report to metar.txt.
+  // Set GITHUB_REPO to "yourusername/yourusername.github.io" so the page can read it
+  // even before GitHub Pages rebuilds.
+  const GITHUB_REPO = "";
+  const sources = ["metar.txt"];
+  if (GITHUB_REPO) sources.push("https://raw.githubusercontent.com/" + GITHUB_REPO + "/main/metar.txt");
+  sources.push("https://aviationweather.gov/api/data/metar?ids=KLAF&format=raw");
+  const obsTime = s => { const m = s.match(/^(\d{6})Z/); return m ? m[1] : ""; };
+  async function refreshMetar(){
+    let best = document.getElementById("metar-raw").textContent.trim();
+    for (const src of sources) {
+      try {
+        const r = await fetch(src + (src.includes("?") ? "&" : "?") + "t=" + Date.now(), {cache: "no-store"});
+        if (!r.ok) continue;
+        const line = (await r.text()).split("\n").find(l => /^(METAR |SPECI )?KLAF /.test(l.trim()));
+        if (!line) continue;
+        const raw = line.trim().replace(/^(METAR |SPECI )?KLAF /, "").replace(/\s*\$\s*$/, "");
+        if (obsTime(raw) > obsTime(best)) best = raw;
+      } catch (e) {}
+    }
+    document.getElementById("metar-raw").textContent = best; renderMetar();
+  }
+  refreshMetar();
+  setInterval(refreshMetar, 10 * 60 * 1000);
 
   // copy emails
   document.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", () => {
