@@ -384,7 +384,7 @@ footer a{text-decoration:none}
 <main class="wrap" id="top">
   <header class="hero">
     <p class="hey">hello, i'm joey!</p>
-    <h1>I'm a <em><span class="role" id="role">student</span></em><span class="caret" aria-hidden="true"></span></h1>
+    <h1>I'm <span id="art">a</span> <em><span class="role" id="role">student</span></em><span class="caret" aria-hidden="true"></span></h1>
     <div class="cta">
       <a class="btn primary" href="#contact">Get in touch</a>
       <a class="btn" href="https://www.linkedin.com/in/josephrseitz" target="_blank" rel="noopener">LinkedIn ↗</a>
@@ -729,8 +729,8 @@ footer a{text-decoration:none}
 <script>
 (() => {
   // rotating role
-  const roles = ["student","pilot","Boilermaker","pianist","saxophonist","engineer"];
-  const el = document.getElementById("role");
+  const roles = ["student","engineer","pilot","musician","Boilermaker","problem solver","leader","mentor"];
+  const el = document.getElementById("role"), art = document.getElementById("art");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let i = 0;
   if (!reduce) {
@@ -739,6 +739,7 @@ footer a{text-decoration:none}
       const next = roles[(i = (i + 1) % roles.length)];
       let t = el.textContent;
       while (t.length) { t = t.slice(0, -1); el.textContent = t; await wait(45); }
+      art.textContent = /^[aeiou]/i.test(next) ? "an" : "a";
       for (const ch of next) { t += ch; el.textContent = t; await wait(75); }
     };
     // One loop, one word at a time: never overlaps, and pauses while the tab is hidden.
