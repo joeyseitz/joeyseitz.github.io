@@ -10,7 +10,7 @@
 <meta name="description" content="Joey Seitz: aeronautical engineering at Purdue, student pilot, pianist and saxophonist.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@500;600&display=swap">
 <style>
 /* Layout: a single long page read top to bottom; METAR strip hero, then sections on a pale-sky ground. Cobalt leads, sky blue and sea-teal support. */
 :root{
@@ -63,7 +63,11 @@ nav ul a:hover{color:var(--accent)}
 .school p.lead em{color:var(--accent)}
 .school p.meta{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 /* hero */
-.hero{padding-block:48px 40px;display:grid;gap:26px}
+.hero{padding-block:44px 40px;display:grid;grid-template-columns:1fr minmax(0,300px);gap:40px;align-items:center}
+.hero-text{display:grid;gap:26px;min-width:0}
+.hero-photo{margin:0;border-radius:14px;overflow:hidden;aspect-ratio:3/4;border:1px solid var(--line);box-shadow:0 24px 50px -28px rgba(0,0,0,.9),0 0 40px -20px var(--glow);transform:rotate(1.5deg)}
+.hero-photo img{width:100%;height:100%;object-fit:cover;display:block}
+@media (max-width: 640px){.hero{grid-template-columns:1fr 110px;gap:16px}.hero-photo{border-radius:10px}}
 /* night-flight glow */
 h1 em,.school p.lead em{text-shadow:0 0 28px var(--glow)}
 .card,.plane,.hours,.xw,.spot,.teams,.map-wrap,.piano-wrap{box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 18px 40px -24px rgba(0,0,0,.8)}
@@ -94,6 +98,9 @@ h1 em,.school p.lead em{text-shadow:0 0 28px var(--glow)}
 h1{font-family:var(--f-display);font-weight:400;font-size:clamp(46px, 9vw, 104px);line-height:.98;margin:0;letter-spacing:-.01em;text-wrap:balance}
 h1 em{color:var(--accent)}
 .role{display:inline-block;min-width:4ch;border-bottom:3px solid var(--accent2)}
+.role::after{content:"\200b"}
+h1{min-height:1em}
+@media (max-width: 640px){h1{min-height:2em}}
 .caret{display:inline-block;width:3px;height:.8em;background:var(--accent2);margin-left:4px;vertical-align:-.05em;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 @media (prefers-reduced-motion: reduce){.caret{animation:none}}
@@ -114,15 +121,14 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .chip.award{background:transparent;border:1px solid var(--accent3);color:var(--accent3)}
 
 /* about */
-.about{display:grid;grid-template-columns:1.15fr 1fr;gap:40px;align-items:start}
+.about{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:start}
 .about > *{min-width:0}
 .prose{display:grid;gap:16px;max-width:62ch}
-.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 20px}
-.trio figure{margin:0;border-radius:10px;overflow:hidden;aspect-ratio:3/4;min-width:0;border:1px solid var(--line);transition:transform .25s}
-.trio figure:hover{transform:translateY(-3px)}
-@media (prefers-reduced-motion: reduce){.trio figure{transition:none}}
-.trio img{width:100%;height:100%;object-fit:cover;display:block}
-@media (max-width: 460px){.trio{gap:8px}.trio figure{border-radius:8px}}
+.matter{margin:20px 0 0}
+.matter img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 36%;border-radius:12px;border:1px solid var(--line)}
+.scribble{display:grid;justify-items:center;margin-top:2px;font-family:"Caveat","Bradley Hand","Segoe Print",cursive;font-size:24px;line-height:1;color:var(--accent3)}
+.scribble svg{width:30px;height:36px}
+.scribble span{transform:rotate(-2deg)}
 
 /* spotify card */
 .spot-hint{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:-6px}
@@ -383,6 +389,7 @@ footer a{text-decoration:none}
 
 <main class="wrap" id="top">
   <header class="hero">
+   <div class="hero-text">
     <p class="hey">hello, i'm joey!</p>
     <h1>I'm <span id="art">a</span> <em><span class="role" id="role">student</span></em><span class="caret" aria-hidden="true"></span></h1>
     <div class="cta">
@@ -390,6 +397,8 @@ footer a{text-decoration:none}
       <a class="btn" href="https://www.linkedin.com/in/josephrseitz" target="_blank" rel="noopener">LinkedIn ↗</a>
       <a class="btn" href="#sandbox">Sandbox ↓</a>
     </div>
+   </div>
+    <figure class="hero-photo"><img src="img/purdue.jpg" alt="Joey in a Purdue crewneck leaning on a brick wall"></figure>
   </header>
 
   <section id="about">
@@ -413,11 +422,6 @@ footer a{text-decoration:none}
         </div>
       </div>
       <div>
-        <div class="trio">
-          <figure><img src="img/matterhorn.jpg" alt="Joey in front of the Matterhorn"></figure>
-          <figure><img src="img/purdue.jpg" alt="Joey in a Purdue jacket with his arms crossed"></figure>
-          <figure><img src="img/headshot.jpg" alt="Joey smiling in a green shirt" style="object-position:center 35%"></figure>
-        </div>
         <div class="teams" aria-label="Teams I root for">
           <p class="teams-head">teams i root for</p>
           <ul>
@@ -447,6 +451,10 @@ footer a{text-decoration:none}
         <figure class="quote">
           <blockquote>“All that is not eternal is eternally out of date.”</blockquote>
           <figcaption>C.S. Lewis</figcaption>
+        </figure>
+        <figure class="matter">
+          <img src="img/matterhorn.jpg" alt="Joey in front of the Matterhorn">
+          <figcaption class="scribble"><svg viewBox="0 0 40 46" aria-hidden="true"><path d="M8 42 C 22 38, 24 24, 20 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M13 12 L20 4 L26 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>me at the matterhorn</span></figcaption>
         </figure>
       </div>
     </div>
