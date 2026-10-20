@@ -51,7 +51,7 @@ nav{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:color
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
   margin:0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));padding:12px max(16px, env(safe-area-inset-left, 0px))}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.brand{font-family:var(--f-mono);font-weight:600;font-size:14px;text-decoration:none;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.brand{font-family:var(--f-mono);font-weight:600;font-size:14px;text-decoration:none;letter-spacing:.04em;display:flex;align-items:center;gap:8px;white-space:nowrap}
 .brand svg{width:22px;height:22px;color:var(--accent)}
 nav ul{list-style:none;display:flex;gap:18px;margin:0;padding:0;flex-wrap:wrap}
 nav ul a{font-family:var(--f-mono);font-size:13px;text-decoration:none;color:var(--muted)}
@@ -67,12 +67,25 @@ nav ul a:hover{color:var(--accent)}
 .school p.meta{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 /* hero */
 .hero{padding-block:48px 40px;display:grid;gap:26px}
-.metar-box{display:grid;gap:8px}
-.wx{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
-.cat{font-weight:600;padding:2px 8px;border-radius:4px;color:#fff;background:var(--cat,#2e7d4f)}
-.metar{font-family:var(--f-mono);font-size:14px;line-height:1.7;color:var(--ink);background:var(--panel);border:1px solid var(--line);
-  border-left:3px solid var(--accent2);border-radius:6px;padding:10px 14px;overflow-wrap:anywhere;word-spacing:.15em}
-.metar b{color:var(--accent);font-weight:600}
+/* weather ticker */
+.ticker{display:flex;align-items:stretch;background:var(--ink);color:var(--sky);font-family:var(--f-mono);
+  margin:0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));overflow:hidden;border-bottom:1px solid var(--line)}
+.tk-pin{flex:none;display:flex;align-items:center;gap:8px;padding:0 16px 0 max(16px, env(safe-area-inset-left, 0px));
+  font-weight:600;font-size:15px;letter-spacing:.06em;background:var(--accent);color:var(--on-accent);position:relative;z-index:1}
+.tk-dot{width:8px;height:8px;border-radius:50%;background:currentColor;animation:tkpulse 2s ease-in-out infinite}
+@keyframes tkpulse{50%{opacity:.25}}
+.tk-viewport{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(90deg,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
+.tk-track{display:flex;width:max-content;animation:tkscroll var(--dur,60s) linear infinite}
+.ticker:hover .tk-track{animation-play-state:paused}
+.tk-group{display:flex;align-items:center;flex:none}
+.tk-item{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:16px;padding:13px 0}
+.tk-item + .tk-item::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.45;margin:0 18px}
+.tk-group::after{content:"";width:60px;flex:none}
+.tk-item .k{opacity:.6}
+.tk-item.raw{opacity:.75}
+@keyframes tkscroll{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.tk-track{animation:none}.tk-dot{animation:none}}
+.cat{font-weight:600;padding:2px 8px;border-radius:4px;color:#fff;background:var(--cat,#2e7d4f);font-size:13px;letter-spacing:.04em}
 .hey{font-family:var(--f-mono);font-size:14px;color:var(--accent3);letter-spacing:.04em;margin:0}
 h1{font-family:var(--f-display);font-weight:400;font-size:clamp(46px, 9vw, 104px);line-height:.98;margin:0;letter-spacing:-.01em;text-wrap:balance}
 h1 em{color:var(--accent)}
@@ -106,12 +119,26 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 @media (max-width: 460px){.trio{gap:8px}.trio figure{border-radius:8px}}
 
 /* spotify card */
+.shuffle{margin-left:auto;font-family:var(--f-mono);font-size:12px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.shuffle:hover{border-color:var(--accent3);color:var(--accent3)}
+.spot-now{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:-6px}
+.sp-row{display:grid;grid-template-columns:20px 44px 1fr;gap:10px;align-items:center;min-width:0;text-decoration:none;border-radius:8px;padding:2px;transition:background .15s}
+.sp-row:hover,.playing .sp-row{background:var(--chip)}
+.sp-row:hover .av,.playing .av{transform:scale(1.06)}
+.spot .av{transition:transform .2s}
+.rk .eq{display:none;align-items:flex-end;justify-content:flex-end;gap:2px;height:12px}
+.rk .eq i{display:block;width:3px;background:var(--accent3);border-radius:1px;animation:eq 0.9s ease-in-out infinite}
+.rk .eq i:nth-child(2){animation-delay:-.3s}.rk .eq i:nth-child(3){animation-delay:-.6s}
+@keyframes eq{0%,100%{height:3px}50%{height:12px}}
+.sp-row:hover .n,.playing .n{display:none}
+.sp-row:hover .eq,.playing .eq{display:flex}
+@media (prefers-reduced-motion: reduce){.rk .eq i{animation:none;height:8px}}
 .spot{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:14px;margin-top:8px}
 .spot-head{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
 .spot-head b{color:var(--accent3);font-weight:600;display:flex;align-items:center;gap:6px}
 .spot-head b::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent3)}
 .spot ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:12px 18px}
-.spot li{display:grid;grid-template-columns:20px 44px 1fr;gap:10px;align-items:center;min-width:0}
+.spot li{min-width:0}
 .spot .rk{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
 .spot .av{width:44px;height:44px;border-radius:50%;position:relative;overflow:hidden;display:grid;place-items:center;font-family:var(--f-display);font-size:21px;color:#fff}
 .spot .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -127,9 +154,18 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .fav img{width:44px;height:44px;border-radius:50%;object-fit:cover}
 .fav-name{margin:2px 0 0;font-weight:600}
 .fav-name span{font-weight:400;color:var(--muted)}
-.teams li:hover .badge{transform:translateY(-3px) rotate(-4deg)}
 @media (prefers-reduced-motion: reduce){.badge{transition:none}}
 .tn{font-size:12px;color:var(--muted);line-height:1.2}
+.hint{opacity:.7}
+.team{all:unset;display:block;width:100%;cursor:pointer;perspective:600px;border-radius:10px}
+.team:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.flip{display:grid;transition:transform .5s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.team:hover .flip,.team.on .flip{transform:rotateY(180deg)}
+.face{grid-area:1/1;display:grid;justify-items:center;align-content:center;gap:6px;text-align:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;min-height:84px}
+.back{transform:rotateY(180deg);background:var(--chip);border-radius:10px;padding:6px}
+.lg{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--accent);line-height:1.3}
+@media (prefers-reduced-motion: reduce){.flip{transition:none}}
+@media (hover: none){.team:hover .flip{transform:none}.team.on .flip{transform:rotateY(180deg)}}
 /* projects & work */
 .split{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
 .split > *{min-width:0}
@@ -141,19 +177,89 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .work{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 
 /* pilot */
-.pilot{display:block;max-width:720px}
-.pilot > *{min-width:0}
-.pilot .placeholder{aspect-ratio:4/3;min-height:0}
-.pilot-text{display:grid;gap:24px}
-.pilot-text p{font-size:18px;max-width:52ch}
-.facts{margin:0;display:grid}
-.facts div{display:grid;grid-template-columns:130px 1fr;gap:16px;padding-block:12px;border-top:1px solid var(--line)}
-.facts dt{color:var(--muted);font-size:15px}
-.facts dd{margin:0;font-weight:600}
-.facts small{font-weight:400;color:var(--muted);font-size:13px;margin-left:6px}
-.placeholder{border-radius:10px;border:1.5px dashed var(--accent2);background:color-mix(in srgb, var(--accent2) 8%, transparent);
-  display:grid;place-items:center;align-content:center;gap:10px;text-align:center;color:var(--muted);font-family:var(--f-mono);font-size:12px;padding:20px}
-.placeholder svg{width:36px;height:36px;color:var(--accent2)}
+.pilot-intro{font-size:18px;max-width:60ch;margin-bottom:36px}
+.hours{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px 18px;margin-bottom:40px}
+.hours-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.hours-num{font-family:var(--f-display);font-size:clamp(44px,7vw,64px);line-height:1;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.hours-unit{font-family:var(--f-body);font-size:16px;color:var(--muted)}
+.hours-asof{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.runway{--asphalt:#1c2633}
+.rw-strip{position:relative;height:56px;border-radius:6px;background:var(--asphalt);overflow:hidden;
+  background-image:repeating-linear-gradient(90deg,#e9eef4 0 4px,transparent 4px 9px);background-size:40px 34px;background-repeat:no-repeat;background-position:10px 11px}
+.rw-center{position:absolute;left:62px;right:62px;top:50%;height:2px;margin-top:-1px;background:repeating-linear-gradient(90deg,#e9eef4 0 18px,transparent 18px 34px);opacity:.75}
+.rw-trail{position:absolute;left:0;top:0;bottom:0;width:calc(var(--p) * 100%);background:linear-gradient(90deg,transparent,color-mix(in srgb,#3a8fd6 45%,transparent));transition:width 1.6s cubic-bezier(.3,.7,.2,1)}
+.rw-num{position:absolute;top:50%;transform:translateY(-50%) rotate(-90deg);font-family:var(--f-mono);font-weight:600;font-size:13px;color:#e9eef4;letter-spacing:.05em}
+.rw-l{left:-4px;display:none}
+.rw-r{right:8px}
+.rw-plane{position:absolute;top:50%;left:calc(var(--p) * 100%);width:34px;height:34px;color:#fff;transform:translate(-70%,-50%) scaleX(-1);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.4));transition:left 1.6s cubic-bezier(.3,.7,.2,1)}
+.runway.taxi .rw-trail{width:0}
+.runway.taxi .rw-plane{left:0}
+.rw-ticks{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){.rw-trail,.rw-plane{transition:none}}
+
+.wind{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 24px;margin-bottom:40px}
+.wind > *{min-width:0}
+.rwy{width:100%;max-width:260px;height:auto;display:block;margin:0 auto}
+.rwy .ring{fill:none;stroke:var(--line);stroke-width:1.5}
+.rwy .tick{stroke:var(--line);stroke-width:1.5}
+.rwy .card{font-family:var(--f-mono);font-size:10px;fill:var(--muted);text-anchor:middle;dominant-baseline:middle}
+.rwy .strip{fill:#1c2633}
+.rwy .cl{stroke:#e9eef4;stroke-width:1.2;stroke-dasharray:6 5}
+.rwy .num{font-family:var(--f-mono);font-size:11px;font-weight:600;fill:var(--ink);text-anchor:middle;dominant-baseline:middle}
+.rwy .num.fav{fill:var(--accent3)}
+.rwy .arrow{transition:transform .8s cubic-bezier(.3,.7,.2,1)}
+.rwy .arrow line{stroke:var(--accent);stroke-width:3;stroke-linecap:round}
+.rwy .arrow path{fill:var(--accent)}
+.wind-now{font-family:var(--f-display);font-size:30px;line-height:1.1;margin:0 0 12px}
+.rwy-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rwy-list li{border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:14px;display:grid;gap:2px}
+.rwy-list li.fav{border-color:var(--accent3);background:color-mix(in srgb,var(--accent3) 8%,transparent)}
+.rwy-list b{font-family:var(--f-mono);font-size:15px}
+.rwy-list .tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent3);margin-left:6px}
+.rwy-list span{color:var(--muted)}
+.fine{font-size:12px;color:var(--muted);margin-top:12px}
+@media (max-width: 820px){.wind{grid-template-columns:1fr}}
+@media (max-width: 420px){.rwy-list{grid-template-columns:1fr}}
+.routes{display:grid;grid-template-columns:1fr 1.15fr;gap:36px;align-items:start;margin-bottom:40px}
+.routes > *{min-width:0}
+.map-wrap{margin:0 auto;width:100%;max-width:440px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
+.map{width:100%;height:auto;display:block}
+.map .state{fill:var(--chip);stroke:var(--line);stroke-width:1.5}
+.map .route{fill:none;stroke:var(--accent2);stroke-width:2;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.4s ease-out forwards;animation-delay:var(--delay)}
+.map .route.dim{opacity:.18}
+.map .route.hot{stroke:var(--accent);stroke-width:3}
+@keyframes draw{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion: reduce){.map .route{animation:none;stroke-dashoffset:0}}
+.map .apt{fill:var(--panel);stroke:var(--accent);stroke-width:2}
+.map .apt.home{fill:var(--accent);stroke:var(--panel);stroke-width:2.5}
+.map .apt-label{font-family:var(--f-mono);font-size:12px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--chip);stroke-width:3px;stroke-linejoin:round}
+.map .state-label{font-family:var(--f-mono);font-size:11px;letter-spacing:.3em;fill:var(--muted);opacity:.7}
+.airports{list-style:none;margin:0;padding:0;display:grid}
+.airports li{display:grid;grid-template-columns:54px 1fr;gap:12px;align-items:baseline;padding:10px 6px;border-top:1px solid var(--line);cursor:default;border-radius:6px}
+.airports li:last-child{border-bottom:1px solid var(--line)}
+.airports li:hover,.airports li:focus-visible{background:var(--chip);outline:none}
+.airports .code{font-family:var(--f-mono);font-weight:600;color:var(--accent)}
+.airports .nm{font-size:15px}
+.airports .via{display:block;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:2px}
+.airports .home-tag{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--on-accent);padding:2px 6px;border-radius:999px;margin-left:6px;vertical-align:2px}
+.more{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:12px}
+
+.planes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.plane{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:grid;gap:10px;align-content:start}
+.plane-art{width:100%;height:auto;max-height:96px;color:var(--ink)}
+.plane-art .body,.plane-art .tailplane,.plane-art .spinner,.plane-art .tire,.plane-art .fairing{fill:currentColor}
+.plane-art .wing{fill:var(--accent)}
+.plane-art .glass{fill:var(--accent2);opacity:.55}
+.plane-art .strut,.plane-art .gear{stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
+.plane-art .prop{stroke:var(--muted);stroke-width:3;stroke-linecap:round}
+.plane-art .ground{stroke:var(--line);stroke-width:1.5}
+.plane:hover .prop{animation:spin .12s linear infinite}
+@keyframes spin{50%{opacity:.15}}
+@media (prefers-reduced-motion: reduce){.plane:hover .prop{animation:none}}
+.plane dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.plane dt{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.plane dd{margin:0;font-weight:600;font-size:15px}
 
 /* music */
 .gallery{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-bottom:32px}
@@ -174,7 +280,8 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .roles article > div{min-width:0}
 .logo-tile{width:120px;height:72px;border-radius:10px;background:var(--tile);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:10px;overflow:hidden}
 .logo-tile img{display:block;width:auto;height:auto;max-width:100px;max-height:50px;margin:auto}
-.roles h3{margin:8px 0 4px}
+.roles .org-name{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,3.2vw,32px);line-height:1.1;margin:0 0 10px}
+.roles p{margin-top:8px}
 .roles p{color:var(--muted);max-width:62ch}
 /* pills */
 .pills{display:flex;flex-wrap:wrap;gap:6px}
@@ -217,7 +324,7 @@ footer a{text-decoration:none}
 
 @media (max-width: 820px){
   .about,.sandbox,.contact-grid{grid-template-columns:1fr}
-  .pilot{grid-template-columns:1fr}
+  .routes,.planes{grid-template-columns:1fr}
   .contact-grid .photo{justify-self:center}
   .split{grid-template-columns:1fr}
   .work,.stage{grid-template-columns:1fr}
@@ -234,7 +341,7 @@ footer a{text-decoration:none}
   <div class="wrap">
     <a class="brand" href="#top" aria-label="Back to top">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13l8-1 5-8h2l-2 8 5 1 1-3h2l-1 4 1 4h-2l-1-3-5 1 2 8h-2l-5-8-8-1z" fill="currentColor"/></svg>
-      JOEY SEITZ
+      <span id="brand-txt">JOEY SEITZ</span>
     </a>
     <ul>
       <li><a href="#about">about</a></li>
@@ -248,18 +355,14 @@ footer a{text-decoration:none}
   </div>
 </nav>
 
+<div class="ticker" id="ticker" aria-label="Current weather at Purdue University Airport">
+  <div class="tk-pin"><span class="tk-dot" aria-hidden="true"></span>KLAF</div>
+  <div class="tk-viewport"><div class="tk-track" id="tk-track"></div></div>
+  <span id="metar-raw" hidden>190854Z AUTO 00000KT 10SM CLR 03/03 A3040 RMK AO2 SLP295 T00330028 51001</span>
+</div>
+
 <main class="wrap" id="top">
   <header class="hero">
-    <div class="metar-box">
-      <div class="wx">
-        <span class="cat" id="metar-cat">MVFR</span>
-        <span>Purdue University Airport (KLAF)</span>
-        <span id="metar-age">observed Oct 15, 10:54 PM EDT</span>
-      </div>
-      <div class="metar" aria-label="Latest weather report at Purdue University Airport">
-        METAR <b>KLAF</b> <span id="metar-raw">190854Z AUTO 00000KT 10SM CLR 03/03 A3040 RMK AO2 SLP295 T00330028 51001</span>
-      </div>
-    </div>
     <p class="hey">hello, i'm joey!</p>
     <h1>I'm a <em><span class="role" id="role">student</span></em><span class="caret" aria-hidden="true"></span></h1>
     <div class="cta">
@@ -285,22 +388,24 @@ footer a{text-decoration:none}
                 <div class="about-text">
           <p>I'm an honors first-year engineering student at Purdue, planning to major in Aeronautical and Astronautical Engineering, and a student pilot working toward my private pilot certificate.</p>
           <p>I'm looking for research and internship or co-op experience where I can put my analytical, technical and teamwork skills to use and keep growing toward a career in aviation and aerospace.</p>
+          <p>Outside of school and flying, I play tennis and pickleball, travel whenever I can, read, and play a lot of Tetris.</p>
         </div>
         <div class="spot" aria-label="Top artists this month">
-          <div class="spot-head"><b>spotify</b><span id="spot-period">top artists · this month</span></div>
+          <div class="spot-head"><b>spotify</b><span id="spot-period">top artists · this month</span><button class="shuffle" id="shuffle" type="button">shuffle</button></div>
+          <p class="spot-now" id="spot-now" aria-live="polite">Tap an artist to open them on Spotify.</p>
           <ol id="spot-list"></ol>
         </div>
       </div>
       <div>
         <div class="teams" aria-label="Teams I root for">
-          <p class="teams-head">teams i root for</p>
+          <p class="teams-head">teams i root for <span class="hint">· tap to flip</span></p>
           <ul>
-            <li><span class="badge"><img src="img/teams/purdue.png" alt="Purdue logo"></span><span class="tn">Purdue</span></li>
-            <li><span class="badge"><img src="img/teams/man-city.png" alt="Man City logo"></span><span class="tn">Man City</span></li>
-            <li><span class="badge"><img src="img/teams/granada.png" alt="Granada CF logo"></span><span class="tn">Granada CF</span></li>
-            <li><span class="badge"><img src="img/teams/colts.png" alt="Colts logo"></span><span class="tn">Colts</span></li>
-            <li><span class="badge"><img src="img/teams/pacers.png" alt="Pacers logo"></span><span class="tn">Pacers</span></li>
-            <li><span class="badge"><img src="img/teams/indy-eleven.png" alt="Indy Eleven logo"></span><span class="tn">Indy Eleven</span></li>
+            <li><button class="team" type="button" aria-label="Purdue, Big Ten"><span class="flip"><span class="face front"><span class="badge"><img src="img/teams/purdue.png" alt=""></span><span class="tn">Purdue</span></span><span class="face back"><span class="lg">Big Ten</span></span></span></button></li>
+            <li><button class="team" type="button" aria-label="Man City, Premier League"><span class="flip"><span class="face front"><span class="badge"><img src="img/teams/man-city.png" alt=""></span><span class="tn">Man City</span></span><span class="face back"><span class="lg">Premier League</span></span></span></button></li>
+            <li><button class="team" type="button" aria-label="Granada CF, Spanish football"><span class="flip"><span class="face front"><span class="badge"><img src="img/teams/granada.png" alt=""></span><span class="tn">Granada CF</span></span><span class="face back"><span class="lg">Spanish football</span></span></span></button></li>
+            <li><button class="team" type="button" aria-label="Colts, NFL"><span class="flip"><span class="face front"><span class="badge"><img src="img/teams/colts.png" alt=""></span><span class="tn">Colts</span></span><span class="face back"><span class="lg">NFL</span></span></span></button></li>
+            <li><button class="team" type="button" aria-label="Pacers, NBA"><span class="flip"><span class="face front"><span class="badge"><img src="img/teams/pacers.png" alt=""></span><span class="tn">Pacers</span></span><span class="face back"><span class="lg">NBA</span></span></span></button></li>
+            <li><button class="team" type="button" aria-label="Indy Eleven, USL Championship"><span class="flip"><span class="face front"><span class="badge"><img src="img/teams/indy-eleven.png" alt=""></span><span class="tn">Indy Eleven</span></span><span class="face back"><span class="lg">USL Championship</span></span></span></button></li>
           </ul>
           <div class="fav">
             <img src="img/sinner.jpg" alt="Jannik Sinner">
@@ -317,36 +422,41 @@ footer a{text-decoration:none}
       <article>
         <div class="logo-tile" style="--tile:#ffffff"><img src="img/orgs/arc.png" alt="Purdue Aviation Research Club logo"></div>
         <div>
-          <div class="pills"><span class="pill">Purdue Aviation Research Club</span><span class="pill yr">2026 – present</span></div>
-          <h3>Aviation Technologies Team</h3><p>Working on the club's aviation technology projects.</p>
+          <h3 class="org-name">Purdue Aviation Research Club</h3>
+          <div class="pills"><span class="pill">Aviation Technologies Team</span><span class="pill yr">2026 – present</span></div>
+          <p>Working on the club's aviation technology projects.</p>
         </div>
       </article>
       <article>
         <div class="logo-tile" style="--tile:#082253"><img src="img/orgs/notable-measures.png" alt="Notable Measures logo"></div>
         <div>
-          <div class="pills"><span class="pill">Notable Measures</span><span class="pill yr">2025 – present</span></div>
-          <h3>Advisory board member</h3><p>Board member for a nonprofit that funds and expands access to musical experiences for young people.</p>
+          <h3 class="org-name">Notable Measures</h3>
+          <div class="pills"><span class="pill">Advisory board member</span><span class="pill yr">2025 – present</span></div>
+          <p>Board member for a nonprofit that funds and expands access to musical experiences for young people.</p>
         </div>
       </article>
       <article>
         <div class="logo-tile" style="--tile:#000000"><img src="img/orgs/pudm.png" alt="Purdue University Dance Marathon logo"></div>
         <div>
-          <div class="pills"><span class="pill">Purdue University Dance Marathon</span><span class="pill yr">2026 – present</span></div>
-          <h3>Event logistics</h3><p>Helping run the events that raise money for childhood cancer research at Riley Children's Hospital.</p>
+          <h3 class="org-name">Purdue University Dance Marathon</h3>
+          <div class="pills"><span class="pill">Event logistics</span><span class="pill yr">2026 – present</span></div>
+          <p>Helping run the events that raise money for childhood cancer research at Riley Children's Hospital.</p>
         </div>
       </article>
       <article>
         <div class="logo-tile" style="--tile:#0f1d2e"><img src="img/orgs/purdue-pilots.png" alt="Purdue Pilots, Inc. logo"></div>
         <div>
-          <div class="pills"><span class="pill">Purdue Pilots, Inc.</span><span class="pill yr">2026 – present</span></div>
-          <h3>Member</h3><p>Purdue's student flying club.</p>
+          <h3 class="org-name">Purdue Pilots, Inc.</h3>
+          <div class="pills"><span class="pill">Member</span><span class="pill yr">2026 – present</span></div>
+          <p>Purdue's student flying club.</p>
         </div>
       </article>
       <article>
         <div class="logo-tile" style="--tile:#ffffff"><img src="img/orgs/team-expansion.png" alt="Discovery English Camp logo"></div>
         <div>
-          <div class="pills"><span class="pill">Discovery English Camp · Granada, Spain</span><span class="pill yr">2025</span></div>
-          <h3>Teaching assistant &amp; photographer</h3><p>Teaching assistant, photographer and videographer for Spanish students ages 4 to 14.</p>
+          <h3 class="org-name">Discovery English Camp</h3>
+          <div class="pills"><span class="pill">Teaching assistant &amp; photographer</span><span class="pill">Granada, Spain</span><span class="pill yr">2025</span></div>
+          <p>Teaching assistant, photographer and videographer for Spanish students ages 4 to 14.</p>
         </div>
       </article>
     </div>
@@ -396,16 +506,96 @@ footer a{text-decoration:none}
 
   <section id="pilot">
     <h2>Pilot</h2>
-    <div class="pilot">
-      <div class="pilot-text">
-        <p>I'm working toward my private pilot certificate, flying out of KLAF and KTYQ. Most of my time has been in the Cessna 172 and the Piper Warrior II, and I'm a member of Purdue Pilots, Inc.</p>
-        <dl class="facts">
-          <div><dt>Total time</dt><dd>51.7 hours <small>as of Oct 19, 2026</small></dd></div>
-          <div><dt>Aircraft</dt><dd>Cessna 172, Piper Warrior II</dd></div>
-          <div><dt>Home fields</dt><dd>KLAF, KTYQ</dd></div>
-          <div><dt>Club</dt><dd>Purdue Pilots, Inc.</dd></div>
-        </dl>
+    <p class="pilot-intro">I'm working toward my private pilot certificate out of KLAF and KTYQ, flying Cessnas and Pipers, and I'm a member of Purdue Pilots, Inc.</p>
+
+    <div class="hours">
+      <div class="hours-head">
+        <p class="hours-num"><span id="hrs-num">51.7</span><span class="hours-unit">hours logged</span></p>
+        <p class="hours-asof" id="hrs-asof">as of Oct 19, 2026</p>
       </div>
+      <div class="runway" id="runway" style="--p:.517" role="img" aria-label="51.7 of the first 100 flight hours">
+        <div class="rw-strip">
+          <span class="rw-num rw-l">0</span>
+          <span class="rw-trail"></span>
+          <span class="rw-center"></span>
+          <svg class="rw-plane" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 13l8-1 5-8h2l-2 8 5 1 1-3h2l-1 4 1 4h-2l-1-3-5 1 2 8h-2l-5-8-8-1z" fill="currentColor"/></svg>
+          <span class="rw-num rw-r" id="hrs-goal">100</span>
+        </div>
+        <div class="rw-ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100 hrs</span></div>
+      </div>
+    </div>
+
+    <div class="wind">
+      <svg class="rwy" id="rwy" viewBox="-120 -120 240 240" role="img" aria-label="KLAF runway diagram with current wind"></svg>
+      <div class="wind-side">
+        <p class="label">KLAF runways right now</p>
+        <p class="wind-now" id="wind-now">Wind calm</p>
+        <ul class="rwy-list" id="rwy-list"></ul>
+        <p class="fine">Headwind and crosswind on each runway from the latest weather report.</p>
+      </div>
+    </div>
+
+    <div class="routes">
+      <figure class="map-wrap">
+        <svg class="map" id="map" viewBox="0 0 400 636" role="img" aria-label="Map of Indiana airports Joey has flown to"></svg>
+      </figure>
+      <div class="routes-side">
+        <p class="label">Where I've flown so far</p>
+        <ul class="airports" id="airports"></ul>
+        <p class="more">More to come.</p>
+      </div>
+    </div>
+
+    <div class="planes">
+      <article class="plane">
+        <svg class="plane-art" viewBox="0 0 240 80" aria-hidden="true">
+          <path class="body" d="M22 37 C22 32 26 30.5 32 30 L52 28.5 L60 19 L106 17 L112 22 L150 27 L194 30 L203 10 L214 8 L219 10 L218 33 L194 36.5 L150 40 L106 45 L62 47.5 L38 47 C28 46.5 22 43 22 37 Z"/>
+          <path class="wing" d="M62 17 Q66 12.5 76 12.5 L118 14 L118 16.5 L62 17.5 Z"/>
+          <path class="glass" d="M54 29 L61 20.5 L66 20.5 L66 29 Z M69 20.5 L86 20.5 L86 29 L69 29 Z M89 20.5 L104 20.5 L104 29 L89 29 Z M107 20 L111 23 L111 28 L107 28 Z"/>
+          <path class="tailplane" d="M186 33 Q196 30.5 226 31.5 L226 33.5 L188 35 Z"/>
+          <line class="strut" x1="96" y1="16" x2="84" y2="45"/>
+          <path class="gear" d="M84 46 L94 66 M34 47 L34 66"/>
+          <circle class="tire" cx="94" cy="70" r="6.5"/><circle class="tire" cx="34" cy="71" r="5.5"/>
+          <ellipse class="spinner" cx="20" cy="38" rx="4" ry="4.5"/>
+          <line class="prop" x1="17" y1="21" x2="17" y2="55"/>
+          <line class="ground" x1="6" y1="77" x2="234" y2="77"/>
+        </svg>
+        <h3>Cessna 172 Skyhawk</h3>
+        <dl><div><dt>Engine</dt><dd>160–180 hp</dd></div><div><dt>Cruise</dt><dd>~120 kt</dd></div></dl>
+      </article>
+      <article class="plane">
+        <svg class="plane-art" viewBox="0 0 240 80" aria-hidden="true">
+          <path class="body" d="M20 38 C20 32 24 29.5 31 29 L54 27.5 L62 18 L108 16 L114 21 L152 26.5 L196 30 L204 8 L216 6 L221 8 L220 33.5 L196 37 L152 41 L108 46 L64 49 L36 48.5 C26 48 20 44 20 38 Z"/>
+          <path class="wing" d="M64 16 Q68 11 79 11 L122 13 L122 15.5 L64 16.5 Z"/>
+          <path class="glass" d="M56 28 L63 19.5 L68 19.5 L68 28 Z M71 19.5 L88 19.5 L88 28 L71 28 Z M91 19.5 L106 19.5 L106 28 L91 28 Z M109 19 L113 22 L113 27 L109 27 Z"/>
+          <path class="tailplane" d="M186 33.5 Q197 30.5 228 31.5 L228 34 L188 35.5 Z"/>
+          <line class="strut" x1="98" y1="15" x2="86" y2="46"/>
+          <path class="gear" d="M86 47 L97 66 M33 48 L33 66"/>
+          <circle class="tire" cx="97" cy="70" r="7"/><circle class="tire" cx="33" cy="71" r="6"/>
+          <ellipse class="spinner" cx="18" cy="38.5" rx="4.5" ry="5"/>
+          <line class="prop" x1="15" y1="19" x2="15" y2="58"/>
+          <line class="prop" x1="12" y1="34" x2="12" y2="43"/>
+          <line class="ground" x1="6" y1="77" x2="234" y2="77"/>
+        </svg>
+        <h3>Cessna 182 Skylane</h3>
+        <dl><div><dt>Engine</dt><dd>230 hp</dd></div><div><dt>Cruise</dt><dd>~140 kt</dd></div></dl>
+      </article>
+      <article class="plane">
+        <svg class="plane-art" viewBox="0 0 240 80" aria-hidden="true">
+          <path class="body" d="M22 40 C22 35 26 33 32 32.5 L56 31 L68 21.5 L104 19.5 L126 26 L196 32.5 L204 12 L215 10 L220 12 L218 36 L150 44 L108 49.5 L62 50 L38 49.5 C28 49 22 45.5 22 40 Z"/>
+          <path class="wing" d="M62 50 Q66 55 78 55 L118 53.5 L118 50 Z"/>
+          <path class="glass" d="M59 31 L69 22.5 L74 22.5 L74 31 Z M77 22 L101 21 L101 31 L77 31 Z M104 21 L120 26 L104 31 Z"/>
+          <path class="tailplane" d="M188 34 Q198 32 228 33 L228 35.5 L190 37 Z"/>
+          <path class="gear" d="M92 55 L92 65 M36 49.5 L36 65"/>
+          <circle class="tire" cx="92" cy="70" r="6.5"/><circle class="tire" cx="36" cy="71" r="5.5"/>
+          <path class="fairing" d="M84 66 Q92 60 100 66 Z"/>
+          <ellipse class="spinner" cx="20" cy="40.5" rx="4" ry="4.5"/>
+          <line class="prop" x1="17" y1="23" x2="17" y2="57"/>
+          <line class="ground" x1="6" y1="77" x2="234" y2="77"/>
+        </svg>
+        <h3>Piper Warrior II</h3>
+        <dl><div><dt>Engine</dt><dd>160 hp</dd></div><div><dt>Cruise</dt><dd>~115 kt</dd></div></dl>
+      </article>
     </div>
   </section>
 
@@ -420,7 +610,7 @@ footer a{text-decoration:none}
     </div>
     <div class="stage">
       <article class="act">
-        <div class="pills"><span class="pill">band · keys &amp; vocals</span></div>
+        <div class="pills"><span class="pill">band · keys &amp; vocals</span><span class="pill yr">2025 – present</span></div>
         <h3>Laminar Flow</h3>
         <p>Nine-piece funk, soul and pop band from Zionsville.</p>
       </article>
@@ -535,7 +725,8 @@ footer a{text-decoration:none}
     const ol = document.getElementById("spot-list");
     TOP_ARTISTS.forEach((a, i) => {
       const li = document.createElement("li");
-      li.innerHTML = `<span class="rk">${i+1}</span><span class="av"></span><span class="nm"></span>`;
+      li.innerHTML = `<a class="sp-row" target="_blank" rel="noopener"><span class="rk"><span class="n">${i+1}</span><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></span><span class="av"></span><span class="nm"></span></a>`;
+      li.querySelector("a").href = "https://open.spotify.com/search/" + encodeURIComponent(a.name);
       const av = li.querySelector(".av");
       av.style.background = colors[i % colors.length];
       av.textContent = a.name[0].toUpperCase();
@@ -543,24 +734,117 @@ footer a{text-decoration:none}
       li.querySelector(".nm").textContent = a.name;
       ol.appendChild(li);
     });
+    const now = document.getElementById("spot-now");
+    let last = -1;
+    document.getElementById("shuffle").addEventListener("click", () => {
+      const rows = [...ol.children];
+      let k; do { k = Math.floor(Math.random() * rows.length); } while (k === last && rows.length > 1);
+      last = k;
+      rows.forEach((r, j) => r.classList.toggle("playing", j === k));
+      now.textContent = "Now playing: " + TOP_ARTISTS[k].name;
+    });
   })();
 
-  // METAR: flight category + age
+  // KLAF runway wind diagram (runway headings magnetic; METAR wind is true, ~5° W variation)
+  const RUNWAYS = [[10,100],[28,280],[5,50],[23,230]], VAR = 5;
+  function renderWind(raw){
+    const svg = document.getElementById("rwy"); if (!svg) return;
+    const m = raw.match(/\b(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?KT\b/);
+    const dir = m && m[1] !== "VRB" ? +m[1] : null, spd = m ? +m[2] : 0, gst = m && m[3] ? +m[3] : null;
+    const rad = a => a * Math.PI / 180;
+    const pt = (r, a) => [r * Math.sin(rad(a)), -r * Math.cos(rad(a))];
+    let h = `<circle class="ring" r="112"/>`;
+    for (let a = 0; a < 360; a += 30) { const [x1,y1] = pt(106,a), [x2,y2] = pt(112,a); h += `<line class="tick" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`; }
+    [["N",0],["E",90],["S",180],["W",270]].forEach(([c,a]) => { const [x,y] = pt(96,a); h += `<text class="card" x="${x}" y="${y}">${c}</text>`; });
+    const comps = RUNWAYS.map(([n, hdg]) => {
+      if (dir === null || spd === 0) return {n, head:0, cross:0, side:""};
+      const a = rad((dir + VAR) - hdg);
+      return {n, head: Math.round(spd * Math.cos(a)), cross: Math.round(Math.abs(spd * Math.sin(a))), side: Math.sin(a) > 0 ? "right" : "left"};
+    });
+    const fav = dir === null || spd === 0 ? null : comps.reduce((a,b) => b.head > a.head ? b : a).n;
+    [[100,0],[50,1]].forEach(([hdg], k) => {
+      h += `<g transform="rotate(${hdg})"><rect class="strip" x="-7" y="${k ? -62 : -78}" width="14" height="${k ? 124 : 156}" rx="2"/><line class="cl" x1="0" y1="${k ? -54 : -70}" x2="0" y2="${k ? 54 : 70}"/></g>`;
+    });
+    RUNWAYS.forEach(([n, hdg]) => { const len = (hdg % 180 === 100 % 180) ? 90 : 74; const [x,y] = pt(len, hdg + 180); h += `<text class="num${n === fav ? " fav" : ""}" x="${x}" y="${y}">${String(n).padStart(2,"0")}</text>`; });
+    if (dir !== null && spd > 0) {
+      h += `<g class="arrow" style="transform:rotate(${dir}deg)"><line x1="0" y1="-112" x2="0" y2="-44"/><path d="M0 -34 L-8 -48 L8 -48 Z"/></g>`;
+    }
+    svg.innerHTML = h;
+    document.getElementById("wind-now").textContent = !m ? "Wind unavailable" : spd === 0 ? "Wind calm" :
+      (dir === null ? "Variable" : dir + "°") + " at " + spd + " kt" + (gst ? ", gusting " + gst : "");
+    document.getElementById("rwy-list").innerHTML = comps.map(c => {
+      const pad = String(c.n).padStart(2,"0");
+      if (spd === 0 || dir === null) return `<li><b>${pad}</b><span>${spd === 0 ? "Calm" : "Variable wind"}</span></li>`;
+      const hw = c.head >= 0 ? `${c.head} kt headwind` : `${-c.head} kt tailwind`;
+      return `<li class="${c.n === fav ? "fav" : ""}"><b>${pad}${c.n === fav ? '<span class="tag">favored</span>' : ""}</b><span>${hw}</span><span>${c.cross} kt crosswind from the ${c.side}</span></li>`;
+    }).join("");
+  }
+
+  // METAR: decode into plain English and build the scrolling band
+  const cToF = c => Math.round(c * 9 / 5 + 32);
+  const num = s => s[0] === "M" ? -(+s.slice(1)) : +s;
+  const WX = {RA:"rain",SN:"snow",DZ:"drizzle",BR:"mist",FG:"fog",HZ:"haze",TS:"thunderstorms",SH:"showers",FZ:"freezing",GR:"hail",PL:"ice pellets",UP:"precipitation"};
+  function decodeMetar(raw){
+    const out = {}, p = raw.trim().split(/\s+/), clouds = [];
+    for (const tok of p) {
+      if (tok === "RMK") break;
+      let m;
+      if ((m = tok.match(/^(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?KT$/))) {
+        out.wind = +m[2] === 0 ? "Calm" : (m[1] === "VRB" ? "Variable" : m[1] + "°") + " at " + (+m[2]) + " kt" + (m[3] ? ", gusting " + (+m[3]) : "");
+      } else if ((m = tok.match(/^(P)?(\d+)(?:\/(\d+))?SM$/))) {
+        out.vis = (m[3] ? m[2] + "/" + m[3] : (m[1] ? "6+" : m[2])) + " mi";
+      } else if ((m = tok.match(/^(FEW|SCT|BKN|OVC|VV)(\d{3})/))) {
+        const n = {FEW:"Few",SCT:"Scattered",BKN:"Broken",OVC:"Overcast",VV:"Obscured"}[m[1]];
+        clouds.push(n + " " + (+m[2] * 100).toLocaleString() + " ft");
+      } else if (tok === "CLR" || tok === "SKC") {
+        clouds.push("Clear");
+      } else if ((m = tok.match(/^(M?\d{2})\/(M?\d{2})?$/))) {
+        out.temp = cToF(num(m[1])) + "°F"; if (m[2]) out.dew = cToF(num(m[2])) + "°F";
+      } else if ((m = tok.match(/^A(\d{4})$/))) {
+        out.alt = (+m[1] / 100).toFixed(2) + " inHg";
+      } else if ((m = tok.match(/^([-+]|VC)?((?:TS|SH|FZ)?)((?:RA|SN|DZ|BR|FG|HZ|GR|PL|UP)+)$/))) {
+        const words = [m[1] === "-" ? "Light" : m[1] === "+" ? "Heavy" : ""].concat([m[2]].filter(Boolean).map(x => WX[x])).concat(m[3].match(/../g).map(x => WX[x]));
+        out.wx = words.filter(Boolean).join(" ").replace(/^./, c => c.toUpperCase());
+      }
+    }
+    out.sky = clouds.join(", ");
+    return out;
+  }
   function renderMetar(){
-    const raw = document.getElementById("metar-raw").textContent;
-    const m = raw.match(/^(\d{2})(\d{2})(\d{2})Z/);
+    const raw = document.getElementById("metar-raw").textContent.trim();
     const vis = (raw.match(/ (\d+)SM/)||[])[1]; const v = vis ? +vis : 10;
     const ceil = Math.min(...[...raw.matchAll(/(BKN|OVC|VV)(\d{3})/g)].map(x=>+x[2]*100), 99999);
     const cat = (ceil<500||v<1)?["LIFR","#a3236b"]:(ceil<1000||v<3)?["IFR","#c0392b"]:(ceil<=3000||v<=5)?["MVFR","#2f5fb3"]:["VFR","#2e7d4f"];
-    const c = document.getElementById("metar-cat"); c.textContent = cat[0]; c.style.setProperty("--cat", cat[1]);
+    const d = decodeMetar(raw);
+    renderWind(raw);
+    let when = "";
+    const m = raw.match(/^(\d{2})(\d{2})(\d{2})Z/);
     if (m) {
       const now = new Date();
       const obs = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), +m[1], +m[2], +m[3]));
       if (obs - now > 86400000) obs.setUTCMonth(obs.getUTCMonth()-1);
       const mins = Math.max(0, Math.round((now - obs)/60000));
       const ago = mins < 60 ? mins+" min ago" : mins < 1440 ? Math.round(mins/60)+" hr ago" : Math.round(mins/1440)+" days ago";
-      document.getElementById("metar-age").textContent = "observed " + obs.toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"}) + " · " + ago;
+      when = obs.toLocaleTimeString([], {hour:"numeric",minute:"2-digit",timeZoneName:"short"}) + " · " + ago;
     }
+    const items = [
+      `<span class="cat" style="--cat:${cat[1]}">${cat[0]}</span><span>Purdue University Airport</span>`,
+      d.wind && `<span class="k">Wind</span> ${d.wind}`,
+      d.vis && `<span class="k">Visibility</span> ${d.vis}`,
+      d.wx && `${d.wx}`,
+      d.sky && `<span class="k">Sky</span> ${d.sky}`,
+      d.temp && `<span class="k">Temp</span> ${d.temp}${d.dew ? " · dew point " + d.dew : ""}`,
+      d.alt && `<span class="k">Altimeter</span> ${d.alt}`,
+      when && `<span class="k">Observed</span> ${when}`,
+      `<span class="raw-txt">METAR KLAF ${raw.replace(/[<>&]/g,"")}</span>`
+    ].filter(Boolean);
+    const group = items.map((h,i) => `<span class="tk-item${i === items.length-1 ? " raw" : ""}">${h}</span>`).join("");
+    const track = document.getElementById("tk-track");
+    track.innerHTML = `<div class="tk-group">${group}</div><div class="tk-group" aria-hidden="true">${group}</div>`;
+    requestAnimationFrame(() => {
+      const w = track.firstElementChild.getBoundingClientRect().width;
+      track.style.setProperty("--dur", Math.max(20, w / 55) + "s");
+    });
   }
   renderMetar();
   setInterval(renderMetar, 60000);
@@ -589,6 +873,114 @@ footer a{text-decoration:none}
   }
   refreshMetar();
   setInterval(refreshMetar, 10 * 60 * 1000);
+
+  // ===== PILOT: edit these to update the hours bar and the map =====
+  const FLIGHT_HOURS = 51.7;
+  const HOURS_AS_OF  = "Oct 19, 2026";
+  const HOURS_GOAL   = 100;
+  // home: true marks a home field. lx/ly nudge the label; side "l" puts it on the left.
+  const AIRPORTS = {
+    KLAF: {name:"Purdue University Airport", city:"West Lafayette", lat:40.4123, lon:-86.9369, home:true, side:"l"},
+    KTYQ: {name:"Indianapolis Executive",    city:"Zionsville",     lat:40.0307, lon:-86.2514, home:true},
+    KCFJ: {name:"Crawfordsville Regional",   city:"Crawfordsville", lat:39.9757, lon:-86.9198, side:"l"},
+    KMCX: {name:"White County Airport",      city:"Monticello",     lat:40.7088, lon:-86.7668, side:"l"},
+    KFKR: {name:"Frankfort Municipal",       city:"Frankfort",      lat:40.2734, lon:-86.5622},
+    "1I9":{name:"Delphi Municipal",          city:"Delphi",         lat:40.5428, lon:-86.6818},
+    I34:  {name:"Greensburg Municipal",      city:"Greensburg",     lat:39.3269, lon:-85.5225},
+    KEYE: {name:"Eagle Creek Airpark",       city:"Indianapolis",   lat:39.8307, lon:-86.2944},
+  };
+  // Each trip: [from, to]. Add new ones at the bottom.
+  const FLIGHTS = [
+    ["KTYQ","KLAF"], ["KTYQ","KCFJ"], ["KLAF","KMCX"], ["KTYQ","KFKR"], ["KLAF","KFKR"],
+    ["KLAF","1I9"], ["KTYQ","I34"], ["KLAF","KEYE"],
+  ];
+  // ===================================================================
+  (function(){
+    // hours runway
+    const rw = document.getElementById("runway");
+    const p = Math.min(1, FLIGHT_HOURS / HOURS_GOAL);
+    document.getElementById("hrs-num").textContent = FLIGHT_HOURS.toFixed(1);
+    document.getElementById("hrs-asof").textContent = "as of " + HOURS_AS_OF;
+    document.getElementById("hrs-goal").textContent = HOURS_GOAL;
+    rw.style.setProperty("--p", p);
+    rw.setAttribute("aria-label", FLIGHT_HOURS + " of the first " + HOURS_GOAL + " flight hours");
+    const ticks = rw.querySelector(".rw-ticks");
+    ticks.innerHTML = [0, .25, .5, .75, 1].map((f,i) => `<span>${Math.round(HOURS_GOAL*f)}${i === 4 ? " hrs" : ""}</span>`).join("");
+    if (!reduce && "IntersectionObserver" in window) {
+      rw.classList.add("taxi");
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { requestAnimationFrame(() => rw.classList.remove("taxi")); io.disconnect(); } }, {threshold:.4});
+      io.observe(rw);
+      setTimeout(() => rw.classList.remove("taxi"), 6000);
+    }
+
+    // map
+    const NS = "http://www.w3.org/2000/svg", svg = document.getElementById("map");
+    const LON0 = -88.15, LAT0 = 41.85, K = 151.3, KX = K * Math.cos(40 * Math.PI / 180);
+    const xy = (lat, lon) => [(lon - LON0) * KX, (LAT0 - lat) * K];
+    const IN = [[-87.525,41.76],[-84.806,41.76],[-84.82,39.105],[-84.89,39.06],[-84.87,38.90],[-85.02,38.78],[-85.42,38.73],[-85.45,38.50],[-85.65,38.33],[-85.83,38.26],[-85.92,38.02],[-86.05,37.99],[-86.27,38.13],[-86.33,38.00],[-86.52,37.92],[-86.66,37.86],[-86.83,37.98],[-87.04,37.90],[-87.13,37.79],[-87.42,37.94],[-87.60,37.97],[-87.88,37.90],[-88.03,37.80],[-88.06,38.05],[-87.93,38.30],[-87.75,38.42],[-87.53,38.68],[-87.50,38.90],[-87.57,39.00],[-87.64,39.17],[-87.53,39.35]];
+    const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+    el("path", {class:"state", d:"M" + IN.map(([lo,la]) => xy(la,lo).map(n => n.toFixed(1)).join(",")).join("L") + "Z"});
+    const sl = el("text", {class:"state-label", x:150, y:540}); sl.textContent = "INDIANA";
+    const routes = [];
+    FLIGHTS.forEach(([a,b], i) => {
+      const A = AIRPORTS[a], B = AIRPORTS[b]; if (!A || !B) return;
+      const [x1,y1] = xy(A.lat,A.lon), [x2,y2] = xy(B.lat,B.lon);
+      const mx = (x1+x2)/2, my = (y1+y2)/2, dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy);
+      const cx = mx - dy * .18, cy = my + dx * .18;
+      const path = el("path", {class:"route", d:`M${x1},${y1} Q${cx},${cy} ${x2},${y2}`});
+      const L = path.getTotalLength ? path.getTotalLength() : len * 1.1;
+      path.style.setProperty("--len", L); path.style.setProperty("--delay", (0.25 + i * 0.12) + "s");
+      path.dataset.ends = a + " " + b;
+      routes.push(path);
+    });
+    for (const code in AIRPORTS) {
+      const A = AIRPORTS[code], [x,y] = xy(A.lat, A.lon);
+      el("circle", {class:"apt" + (A.home ? " home" : ""), cx:x, cy:y, r:A.home ? 6.5 : 5});
+      const left = A.side === "l";
+      const tx = el("text", {class:"apt-label", x:x + (left ? -10 : 10) + (A.lx||0), y:y + 4 + (A.ly||0), "text-anchor": left ? "end" : "start"});
+      tx.textContent = code;
+    }
+
+    // list
+    const ul = document.getElementById("airports");
+    const via = {};
+    FLIGHTS.forEach(([a,b]) => { (via[b] = via[b] || []).push(a); });
+    const order = Object.keys(AIRPORTS).sort((x,y) => (AIRPORTS[y].home?1:0) - (AIRPORTS[x].home?1:0));
+    order.forEach(code => {
+      const A = AIRPORTS[code], li = document.createElement("li");
+      li.tabIndex = 0;
+      li.innerHTML = `<span class="code"></span><span><span class="nm"></span><span class="via"></span></span>`;
+      li.querySelector(".code").textContent = code;
+      li.querySelector(".nm").textContent = A.name + ", " + A.city;
+      if (A.home) { const tag = document.createElement("span"); tag.className = "home-tag"; tag.textContent = "home"; li.querySelector(".nm").after(tag); }
+      if (via[code]) li.querySelector(".via").textContent = "via " + via[code].join(" & ");
+      const on = () => routes.forEach(r => { const hit = r.dataset.ends.split(" ").includes(code); r.classList.toggle("hot", hit); r.classList.toggle("dim", !hit); });
+      const off = () => routes.forEach(r => r.classList.remove("hot","dim"));
+      li.addEventListener("mouseenter", on); li.addEventListener("focus", on);
+      li.addEventListener("mouseleave", off); li.addEventListener("blur", off);
+      ul.appendChild(li);
+    });
+  })();
+
+  // easter egg: hover the name in the nav
+  (function(){
+    const b = document.querySelector(".brand"), s = document.getElementById("brand-txt");
+    const A = "JOEY SEITZ", B = "JULIETT OSCAR ECHO YANKEE", CH = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let timer, back;
+    const morph = to => {
+      clearInterval(timer); let f = 0;
+      timer = setInterval(() => {
+        f++; s.textContent = to.split("").map((c,i) => c === " " || i < f ? c : CH[Math.floor(Math.random()*26)]).join("");
+        if (f > to.length) { clearInterval(timer); s.textContent = to; }
+      }, reduce ? 0 : 22);
+    };
+    b.addEventListener("mouseenter", () => { clearTimeout(back); morph(B); });
+    b.addEventListener("mouseleave", () => { back = setTimeout(() => morph(A), 900); });
+    b.addEventListener("touchstart", () => { morph(B); clearTimeout(back); back = setTimeout(() => morph(A), 2600); }, {passive:true});
+  })();
+
+  // team cards flip on tap
+  document.querySelectorAll(".team").forEach(b => b.addEventListener("click", () => b.classList.toggle("on")));
 
   // copy emails
   document.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", () => {
