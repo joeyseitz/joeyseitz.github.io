@@ -14,31 +14,28 @@
 <style>
 /* Layout: a single long page read top to bottom; METAR strip hero, then sections on a pale-sky ground. Cobalt leads, sky blue and sea-teal support. */
 :root{
-  --sky:#eef3f8;        /* page ground */
-  --panel:#ffffff;
-  --ink:#0f1d2e;
-  --muted:#52637a;
-  --line:#c9d6e4;
-  --accent:#2251c7;     /* cobalt */
-  --accent2:#3a8fd6;    /* open-sky blue */
-  --accent3:#138a7e;    /* sea teal */
-  --chip:#e0e9f3;
-  --on-accent:#ffffff;
+  /* Night flight: a single dark look, like a cockpit at night */
+  --sky:#070d18;        /* page ground: night sky */
+  --panel:#0e1829;      /* instrument panel */
+  --ink:#e6edf7;
+  --muted:#8b9db5;
+  --line:#1d2c44;
+  --accent:#6fa8ff;     /* glass-cockpit blue */
+  --accent2:#4cc3f5;    /* sky cyan */
+  --accent3:#3fd6b4;    /* instrument teal */
+  --chip:#15233a;
+  --on-accent:#061020;
+  --glow:rgba(111,168,255,.35);
   --f-display:"Instrument Serif", "Iowan Old Style", Georgia, serif;
   --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --sky:#0b1420;--panel:#122033;--ink:#e4ecf5;--muted:#8fa2b8;--line:#22364d;
-  --accent:#7aa2ff;--accent2:#66b6f0;--accent3:#4cc7b6;--chip:#182b42;--on-accent:#0b1420;color-scheme:dark}}
-:root[data-theme="dark"]{
-  --sky:#0b1420;--panel:#122033;--ink:#e4ecf5;--muted:#8fa2b8;--line:#22364d;
-  --accent:#7aa2ff;--accent2:#66b6f0;--accent3:#4cc7b6;--chip:#182b42;--on-accent:#0b1420;color-scheme:dark}
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
-body{background:var(--sky);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;
+body{background-color:var(--sky);background-image:radial-gradient(1200px 600px at 15% -10%,rgba(76,140,255,.16),transparent 60%),radial-gradient(900px 500px at 100% 20%,rgba(63,214,180,.07),transparent 60%);background-attachment:fixed;color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 a{color:inherit}
 a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
@@ -47,7 +44,7 @@ p{margin:0}
 
 /* nav */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--sky)}
-nav{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:color-mix(in srgb, var(--sky) 88%, transparent);
+nav{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:color-mix(in srgb, var(--sky) 82%, transparent);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
   margin:0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));padding:12px max(16px, env(safe-area-inset-left, 0px))}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
@@ -67,8 +64,15 @@ nav ul a:hover{color:var(--accent)}
 .school p.meta{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
 /* hero */
 .hero{padding-block:48px 40px;display:grid;gap:26px}
+/* night-flight glow */
+h1 em,.school p.lead em{text-shadow:0 0 28px var(--glow)}
+.card,.plane,.hours,.xw,.spot,.teams,.map-wrap,.piano-wrap{box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 18px 40px -24px rgba(0,0,0,.8)}
+.card:hover,.plane:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.badge img{filter:drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 1px rgba(255,255,255,.6)) drop-shadow(0 0 8px rgba(160,200,255,.18))}
+.btn.primary{box-shadow:0 0 24px -6px var(--glow)}
+.tk-pin{box-shadow:0 0 24px var(--glow)}
 /* weather ticker */
-.ticker{display:flex;align-items:stretch;background:var(--ink);color:var(--sky);font-family:var(--f-mono);
+.ticker{display:flex;align-items:stretch;background:#03070f;color:var(--ink);font-family:var(--f-mono);
   margin:0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));overflow:hidden;border-bottom:1px solid var(--line)}
 .tk-pin{flex:none;display:flex;align-items:center;gap:8px;padding:0 16px 0 max(16px, env(safe-area-inset-left, 0px));
   font-weight:600;font-size:15px;letter-spacing:.06em;background:var(--accent);color:var(--on-accent);position:relative;z-index:1}
@@ -161,6 +165,20 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .teams li:hover .t-name,.teams li:focus .t-name{opacity:0}
 .teams li:hover .t-lg,.teams li:focus .t-lg{opacity:1}
 @media (prefers-reduced-motion: reduce){.teams li,.badge{transition:none}}
+.resume,.quote{background:var(--panel);border:1px solid var(--line);border-radius:12px;max-width:340px;margin:20px auto 0;box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 18px 40px -24px rgba(0,0,0,.8)}
+.resume{display:grid;grid-template-columns:110px 1fr;gap:16px;padding:16px;align-items:center}
+.resume > *{min-width:0}
+.resume-thumb{display:block;border-radius:6px;overflow:hidden;border:1px solid var(--line);transition:transform .25s}
+.resume-thumb:hover{transform:rotate(-2deg) scale(1.04)}
+.resume-thumb img{display:block;width:100%}
+.resume-title{font-weight:600;margin:0}
+.resume-meta{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin:2px 0 12px}
+.resume-btns .btn{font-size:13px;padding:8px 14px;display:inline-block}
+.quote{padding:22px 22px 18px;margin-top:20px}
+.quote blockquote{margin:0;font-family:var(--f-display);font-style:italic;font-size:26px;line-height:1.2;text-wrap:balance}
+.quote figcaption{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:12px}
+.quote figcaption::before{content:"— "}
+@media (prefers-reduced-motion: reduce){.resume-thumb{transition:none}}
 /* projects & work */
 .split{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
 .split > *{min-width:0}
@@ -178,7 +196,7 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .hours-num{font-family:var(--f-display);font-size:clamp(44px,7vw,64px);line-height:1;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
 .hours-unit{font-family:var(--f-body);font-size:16px;color:var(--muted)}
 .hours-asof{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
-.runway{--asphalt:#1c2633}
+.runway{--asphalt:#03070f}
 .rw-strip{position:relative;height:56px;border-radius:6px;background:var(--asphalt);overflow:hidden;
   background-image:repeating-linear-gradient(90deg,#e9eef4 0 4px,transparent 4px 9px);background-size:40px 34px;background-repeat:no-repeat;background-position:10px 11px}
 .rw-center{position:absolute;left:62px;right:62px;top:50%;height:2px;margin-top:-1px;background:repeating-linear-gradient(90deg,#e9eef4 0 18px,transparent 18px 34px);opacity:.75}
@@ -193,7 +211,9 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .rw-ticks{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion: reduce){.rw-trail,.rw-plane{transition:none}}
 
-.xw{display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-bottom:40px;max-width:720px}
+.xw{display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin-top:36px}
+.sandbox-sub{color:var(--muted);margin:-16px 0 28px}
+.toy-title{font-family:var(--f-display);font-weight:400;font-size:28px;margin:0 0 8px}
 .xw > *{min-width:0}
 .xw-dial{width:100%;max-width:200px;height:auto;display:block;margin:0 auto;touch-action:none;cursor:grab;border-radius:50%}
 .xw-dial:active{cursor:grabbing}
@@ -366,7 +386,7 @@ footer a{text-decoration:none}
     <div class="cta">
       <a class="btn primary" href="#contact">Get in touch</a>
       <a class="btn" href="https://www.linkedin.com/in/josephrseitz" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <a class="btn" href="#sandbox">Play the piano ↓</a>
+      <a class="btn" href="#sandbox">Sandbox ↓</a>
     </div>
   </header>
 
@@ -402,7 +422,7 @@ footer a{text-decoration:none}
             <li tabindex="0"><span class="badge"><img src="img/teams/purdue.png" alt="Purdue logo"></span><span class="tn"><span class="t-name">Purdue</span><span class="t-lg">Big 10</span></span></li>
             <li tabindex="0"><span class="badge"><img src="img/teams/man-city.png" alt="Man City logo"></span><span class="tn"><span class="t-name">Man City</span><span class="t-lg">Premier League</span></span></li>
             <li tabindex="0"><span class="badge"><img src="img/teams/granada.png" alt="Granada CF logo"></span><span class="tn"><span class="t-name">Granada CF</span><span class="t-lg">La Liga 2</span></span></li>
-            <li tabindex="0"><span class="badge"><img src="img/teams/colts.png" alt="Colts logo"></span><span class="tn"><span class="t-name">Colts</span><span class="t-lg">NFL</span></span></li>
+            <li tabindex="0"><span class="badge"><img src="img/teams/fever.png" alt="Indiana Fever logo"></span><span class="tn"><span class="t-name">Fever</span><span class="t-lg">WNBA</span></span></li>
             <li tabindex="0"><span class="badge"><img src="img/teams/pacers.png" alt="Pacers logo"></span><span class="tn"><span class="t-name">Pacers</span><span class="t-lg">NBA</span></span></li>
             <li tabindex="0"><span class="badge"><img src="img/teams/indy-eleven.png" alt="Indy Eleven logo"></span><span class="tn"><span class="t-name">Indy Eleven</span><span class="t-lg">USL Championship</span></span></li>
           </ul>
@@ -411,6 +431,21 @@ footer a{text-decoration:none}
             <div><p class="teams-head" style="margin:0">favorite tennis player</p><p class="fav-name">Jannik Sinner <span>· Italy</span></p></div>
           </div>
         </div>
+        <div class="resume">
+          <a class="resume-thumb" href="files/Joseph_Seitz_Resume.pdf" target="_blank" rel="noopener"><img src="img/resume-thumb.jpg" alt="Preview of Joey Seitz's résumé"></a>
+          <div class="resume-body">
+            <p class="teams-head">résumé</p>
+            <p class="resume-title">Joseph R. Seitz</p>
+            <p class="resume-meta">Updated Oct 2026</p>
+            <div class="resume-btns">
+              <a class="btn primary" href="files/Joseph_Seitz_Resume.pdf" target="_blank" rel="noopener">View PDF ↗</a>
+            </div>
+          </div>
+        </div>
+        <figure class="quote">
+          <blockquote>“All that is not eternal is eternally out of date.”</blockquote>
+          <figcaption>C.S. Lewis</figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -521,21 +556,6 @@ footer a{text-decoration:none}
           <span class="rw-num rw-r" id="hrs-goal">100</span>
         </div>
         <div class="rw-ticks"><span>0</span><span>25</span><span>50</span><span>75</span><span>100 hrs</span></div>
-      </div>
-    </div>
-
-    <div class="xw">
-      <svg class="xw-dial" id="xw-dial" viewBox="-110 -110 220 220" role="slider" tabindex="0" aria-label="Wind direction" aria-valuemin="0" aria-valuemax="359" aria-valuenow="250"></svg>
-      <div class="xw-side">
-        <p class="label">Crosswind check</p>
-        <p class="xw-hint">Drag the arrow to set the wind. Pick a runway.</p>
-        <div class="xw-rwys" id="xw-rwys" role="group" aria-label="Runway"></div>
-        <label class="xw-spd" for="xw-speed"><span>Wind speed</span><b id="xw-spdval">12 kt</b></label>
-        <input type="range" id="xw-speed" min="0" max="35" value="12">
-        <div class="xw-out">
-          <div><span>Headwind</span><b id="xw-head">–</b></div>
-          <div><span>Crosswind</span><b id="xw-cross">–</b></div>
-        </div>
       </div>
     </div>
 
@@ -652,14 +672,30 @@ footer a{text-decoration:none}
   </section>
 
   <section id="sandbox">
+    <h2>Sandbox</h2>
+    <p class="sandbox-sub">A couple of things to mess around with.</p>
     <div class="sandbox">
       <div>
-        <h2>Play something</h2>
+        <h3 class="toy-title">Piano</h3>
         <p style="color:var(--muted)">Tap the keys, or use your keyboard: <span style="font-family:var(--f-mono)">A S D F G H J K</span> for the white keys, <span style="font-family:var(--f-mono)">W E T Y U</span> for the black ones.</p>
       </div>
       <div class="piano-wrap">
         <div class="piano" id="piano" role="group" aria-label="One-octave piano"></div>
         <p class="piano-note" id="pnote">C4 to C5 · tap a key</p>
+      </div>
+    </div>
+    <div class="xw">
+      <svg class="xw-dial" id="xw-dial" viewBox="-110 -110 220 220" role="slider" tabindex="0" aria-label="Wind direction" aria-valuemin="0" aria-valuemax="359" aria-valuenow="250"></svg>
+      <div class="xw-side">
+        <h3 class="toy-title">Crosswind calculator</h3>
+        <p class="xw-hint">Pick a runway at KLAF, then drag the arrow to change the wind and see what you'd be landing in.</p>
+        <div class="xw-rwys" id="xw-rwys" role="group" aria-label="Runway"></div>
+        <label class="xw-spd" for="xw-speed"><span>Wind speed</span><b id="xw-spdval">12 kt</b></label>
+        <input type="range" id="xw-speed" min="0" max="35" value="12">
+        <div class="xw-out">
+          <div><span>Headwind</span><b id="xw-head">–</b></div>
+          <div><span>Crosswind</span><b id="xw-cross">–</b></div>
+        </div>
       </div>
     </div>
   </section>
@@ -914,7 +950,7 @@ footer a{text-decoration:none}
       li.querySelector(".code").textContent = code;
       li.querySelector(".nm").textContent = A.name + ", " + A.city;
       if (A.home) { const tag = document.createElement("span"); tag.className = "home-tag"; tag.textContent = "home"; li.querySelector(".nm").after(tag); }
-      if (via[code]) li.querySelector(".via").textContent = "via " + via[code].join(" & ");
+      if (via[code] && !A.home) li.querySelector(".via").textContent = "via " + via[code].join(" & ");
       const on = () => routes.forEach(r => { const hit = r.dataset.ends.split(" ").includes(code); r.classList.toggle("hot", hit); r.classList.toggle("dim", !hit); });
       const off = () => routes.forEach(r => r.classList.remove("hot","dim"));
       li.addEventListener("mouseenter", on); li.addEventListener("focus", on);
