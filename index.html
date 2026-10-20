@@ -117,8 +117,10 @@ h3{font-size:19px;margin:0;font-weight:600;line-height:1.3}
 .about{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:start}
 .about > *{min-width:0}
 .prose{display:grid;gap:16px;max-width:62ch}
-.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:36px}
-.trio figure{margin:0;border-radius:12px;overflow:hidden;aspect-ratio:4/5;min-width:0}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:340px;margin:0 auto 20px}
+.trio figure{margin:0;border-radius:10px;overflow:hidden;aspect-ratio:3/4;min-width:0;border:1px solid var(--line);transition:transform .25s}
+.trio figure:hover{transform:translateY(-3px)}
+@media (prefers-reduced-motion: reduce){.trio figure{transition:none}}
 .trio img{width:100%;height:100%;object-fit:cover;display:block}
 @media (max-width: 460px){.trio{gap:8px}.trio figure{border-radius:8px}}
 
@@ -392,11 +394,6 @@ footer a{text-decoration:none}
 
   <section id="about">
     <h2>About me</h2>
-    <div class="trio">
-      <figure><img src="img/matterhorn.jpg" alt="Joey in front of the Matterhorn"></figure>
-      <figure><img src="img/purdue.jpg" alt="Joey in a Purdue jacket with his arms crossed"></figure>
-      <figure><img src="img/headshot.jpg" alt="Joey smiling in a green shirt" style="object-position:center 35%"></figure>
-    </div>
     <div class="about">
       <div class="prose">
         <div class="school">
@@ -416,6 +413,11 @@ footer a{text-decoration:none}
         </div>
       </div>
       <div>
+        <div class="trio">
+          <figure><img src="img/matterhorn.jpg" alt="Joey in front of the Matterhorn"></figure>
+          <figure><img src="img/purdue.jpg" alt="Joey in a Purdue jacket with his arms crossed"></figure>
+          <figure><img src="img/headshot.jpg" alt="Joey smiling in a green shirt" style="object-position:center 35%"></figure>
+        </div>
         <div class="teams" aria-label="Teams I root for">
           <p class="teams-head">teams i root for</p>
           <ul>
