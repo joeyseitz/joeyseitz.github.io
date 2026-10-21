@@ -67,7 +67,12 @@ nav ul a:hover{color:var(--accent)}
 .hero-text{display:grid;gap:26px;min-width:0}
 .hero-photo{margin:0;border-radius:14px;overflow:hidden;aspect-ratio:3/4;border:1px solid var(--line);box-shadow:0 24px 50px -28px rgba(0,0,0,.9),0 0 40px -20px var(--glow);transform:rotate(1.5deg)}
 .hero-photo img{width:100%;height:100%;object-fit:cover;display:block}
-@media (max-width: 640px){.hero{grid-template-columns:1fr 110px;gap:16px}.hero-photo{border-radius:10px}}
+@media (max-width: 640px){
+  .hero{grid-template-columns:1fr 120px;grid-template-areas:"hey hey" "h1 h1" "cta photo";gap:18px 16px;align-items:start}
+  .hero-text{display:contents}
+  .hero .hey{grid-area:hey}.hero h1{grid-area:h1}.hero .cta{grid-area:cta;align-self:center}
+  .hero-photo{grid-area:photo;border-radius:10px}
+}
 /* phone tweaks */
 @media (hover: none), (pointer: coarse){.kbd-hint{display:none}}
 @media (max-width: 640px){
@@ -82,10 +87,12 @@ nav ul a:hover{color:var(--accent)}
   .tk-item{font-size:14px;padding:11px 0}
   .tk-pin{font-size:13px}
   section{padding-block:44px}
-  .spot ol{grid-template-columns:1fr 1fr;gap:10px 8px}
-  .sp-row{grid-template-columns:auto 36px 1fr;gap:8px}
-  .spot .av{width:36px;height:36px}
-  .spot .nm{font-size:14px}
+  .spot ol#spot-list{grid-template-columns:1fr;gap:4px}
+  .spot .sp-row{grid-template-columns:20px 36px 1fr;gap:10px}
+  .spot .sp-row .av{width:36px;height:36px;font-size:17px}
+  .spot .nm{font-size:15px;white-space:nowrap}
+  h1{font-size:clamp(30px,9.4vw,40px);min-height:0}
+  h1 em{display:block;white-space:nowrap}
   .sp-row .go{display:none}
 }
 /* night-flight glow */
@@ -120,7 +127,7 @@ h1 em{color:var(--accent)}
 .role{display:inline-block;min-width:4ch;border-bottom:3px solid var(--accent2)}
 .role::after{content:"\200b"}
 h1{min-height:1em}
-@media (max-width: 640px){h1{min-height:2em}}
+
 .caret{display:inline-block;width:3px;height:.8em;background:var(--accent2);margin-left:4px;vertical-align:-.05em;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 @media (prefers-reduced-motion: reduce){.caret{animation:none}}
@@ -438,7 +445,7 @@ footer a{text-decoration:none}
         </div>
         <div class="spot" aria-label="Top artists this month">
           <div class="spot-head"><b>spotify</b><span id="spot-period">top artists · this month</span></div>
-          <p class="spot-hint">Click an artist to open their Spotify page ↗</p>
+          <p class="spot-hint">Click an artist to open their Spotify&nbsp;page&nbsp;↗</p>
           <ol id="spot-list"></ol>
         </div>
       </div>
