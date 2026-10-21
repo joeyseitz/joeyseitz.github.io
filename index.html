@@ -68,6 +68,26 @@ nav ul a:hover{color:var(--accent)}
 .hero-photo{margin:0;border-radius:14px;overflow:hidden;aspect-ratio:3/4;border:1px solid var(--line);box-shadow:0 24px 50px -28px rgba(0,0,0,.9),0 0 40px -20px var(--glow);transform:rotate(1.5deg)}
 .hero-photo img{width:100%;height:100%;object-fit:cover;display:block}
 @media (max-width: 640px){.hero{grid-template-columns:1fr 110px;gap:16px}.hero-photo{border-radius:10px}}
+/* phone tweaks */
+@media (hover: none), (pointer: coarse){.kbd-hint{display:none}}
+@media (max-width: 640px){
+  nav .wrap{flex-wrap:nowrap;gap:14px}
+  nav ul{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;min-width:0;padding-bottom:2px;
+    -webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}
+  nav ul::-webkit-scrollbar{display:none}
+  nav ul a{white-space:nowrap}
+  .brand{font-size:13px}
+  .cta{gap:8px}
+  .cta .btn{font-size:13px;padding:9px 14px}
+  .tk-item{font-size:14px;padding:11px 0}
+  .tk-pin{font-size:13px}
+  section{padding-block:44px}
+  .spot ol{grid-template-columns:1fr 1fr;gap:10px 8px}
+  .sp-row{grid-template-columns:auto 36px 1fr;gap:8px}
+  .spot .av{width:36px;height:36px}
+  .spot .nm{font-size:14px}
+  .sp-row .go{display:none}
+}
 /* night-flight glow */
 h1 em,.school p.lead em{text-shadow:0 0 28px var(--glow)}
 .card,.plane,.hours,.xw,.spot,.teams,.map-wrap,.piano-wrap{box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 18px 40px -24px rgba(0,0,0,.8)}
@@ -358,9 +378,10 @@ footer a{text-decoration:none}
   .gallery .tall{grid-row:auto;aspect-ratio:1/1}
   .gallery figure:last-child{grid-column:span 2;aspect-ratio:3/2}
   .roles article{grid-template-columns:1fr;gap:12px}
-  nav ul{gap:12px}
+  nav ul{gap:16px}
+  .contact-grid .photo{max-width:300px}
 }
-@media (max-width: 460px){ .spot ol{grid-template-columns:1fr} }
+
 </style>
 
 <nav>
@@ -687,7 +708,7 @@ footer a{text-decoration:none}
     <div class="sandbox">
       <div>
         <h3 class="toy-title">Piano</h3>
-        <p style="color:var(--muted)">Tap the keys, or use your keyboard: <span style="font-family:var(--f-mono)">A S D F G H J K</span> for the white keys, <span style="font-family:var(--f-mono)">W E T Y U</span> for the black ones.</p>
+        <p style="color:var(--muted)">Tap the keys<span class="kbd-hint">, or use your keyboard: <span style="font-family:var(--f-mono)">A S D F G H J K</span> for the white keys, <span style="font-family:var(--f-mono)">W E T Y U</span> for the black ones</span>.</p>
       </div>
       <div class="piano-wrap">
         <div class="piano" id="piano" role="group" aria-label="One-octave piano"></div>
