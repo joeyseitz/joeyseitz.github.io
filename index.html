@@ -876,7 +876,13 @@ footer a{text-decoration:none}
   const sources = ["metar.txt"];
   if (GITHUB_REPO) sources.push("https://raw.githubusercontent.com/" + GITHUB_REPO + "/main/metar.txt");
   sources.push("https://aviationweather.gov/api/data/metar?ids=KLAF&format=raw");
-  const obsTime = s => { const m = s.match(/^(\d{6})Z/); return m ? m[1] : ""; };
+  // Real timestamp of a report (handles month rollover: "02" in November is newer than "19" in October)
+  const obsTime = s => {
+    const m = s.match(/^(\d{2})(\d{2})(\d{2})Z/); if (!m) return 0;
+    const now = new Date(), d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), +m[1], +m[2], +m[3]));
+    if (d - now > 86400000) d.setUTCMonth(d.getUTCMonth() - 1);
+    return d.getTime();
+  };
   async function refreshMetar(){
     let best = document.getElementById("metar-raw").textContent.trim();
     for (const src of sources) {
